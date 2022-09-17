@@ -1,0 +1,21 @@
+name: Build Docker Image
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build_image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - nmae: checkout repo
+      uses: actions/checkout@v2.4.2
+    
+    - name: print msg
+      run: echo "Starting to build Docker Image for webserver"
+    
+    - name: Docker Build
+      run: docker build -t webserver:0.1 .
+
+    - name: print msg
+      run: echo "Build completed"
