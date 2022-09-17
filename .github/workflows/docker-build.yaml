@@ -14,9 +14,10 @@ jobs:
     - name: print msg
       run: echo "Starting to build Docker Image for webserver"
     
-    - name: Docker Build
-      run: docker build -t nginx_hello:0.1 .
-
+    - name: Docker Build & tag for push
+      run: | 
+        docker build -t nginx_hello:0.1 .
+        docker tag nginx_hello:0.1 singymingy86/nginx_hello:0.1
     - name: print msg
       run: echo "Build completed"
 
