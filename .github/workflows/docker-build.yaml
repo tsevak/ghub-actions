@@ -19,3 +19,9 @@ jobs:
 
     - name: print msg
       run: echo "Build completed"
+
+    - name: run container
+      run: docker run -d -p 80:80 webserver:0.1
+
+    - name: Let access it
+      run: curl http://127.0.0.1
