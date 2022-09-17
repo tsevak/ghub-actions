@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - nmae: checkout repo
+    - name: checkout repo
       uses: actions/checkout@v2.4.2
     
     - name: print msg
