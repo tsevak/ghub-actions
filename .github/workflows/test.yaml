@@ -23,4 +23,4 @@ jobs:
         registry: docker.io
         image: singymingy86/nginx_hello
         tags: 0.1
-        buildArgs: pull,no-cache
+        buildArgs: --pull, --no-cache
