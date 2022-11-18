@@ -23,5 +23,6 @@ jobs:
         registry: docker.io
         image: singymingy86/nginx_hello
         tags: 0.1
-        pull:
-        no-cache:
+        step.with:
+          - pull
+          - no-cache
