@@ -26,7 +26,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
-        push: false
+        push: true
         tags: singymingy86/nginx_hello:latest,singymingy86/nginx_hello:0.3
         no-cache: true
         pull: true
