@@ -28,6 +28,8 @@ jobs:
       with:
         push: false
         tags: singymingy86/nginx_hello:latest,singymingy86/nginx_hello:0.2
+        no-cache: true
+        pull: true
     
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
