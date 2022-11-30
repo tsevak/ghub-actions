@@ -23,6 +23,9 @@ jobs:
       - name: print env
         run: printenv
 
+      - name: print short git sha
+        run: echo "SHORT GIT SHA is $(git rev-parse --short $GITHUB_SHA)"
+
       # Runs a set of commands using the runners shell
       - name: list repo content
         run: ls -la
