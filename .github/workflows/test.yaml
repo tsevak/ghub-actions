@@ -22,15 +22,25 @@ jobs:
       with:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
-    
+
+    - name: Set Actions Allow Unsecure Commands
+      run: |
+          echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $GITHUB_ENV
+        
+    - name: Get Short SHA of commig for tag
+      id: tprep
+      run: echo  "::set-output name=tag::$(git rev-parse --short $GITHUB_SHA)"
+
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: singymingy86/nginx_hello:latest,singymingy86/nginx_hello:0.3
+        tags: |
+          singymingy86/nginx_hello:latest
+          singymingy86/nginx_hello:${{ steps.tprep.outputs.tag }}
         no-cache: true
         pull: true
-    
+        
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
