@@ -34,7 +34,7 @@ jobs:
         push: false
         tags: |
           singymingy86/nginx_hello:latest
-          singymingy86/nginx_hello:${{ steps.tprep.outputs.tag }}
+          singymingy86/nginx_hello:${{ env.tag }}
         no-cache: true
         pull: true
         
