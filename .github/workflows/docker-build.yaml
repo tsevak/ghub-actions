@@ -13,16 +13,20 @@ jobs:
     
     - name: print msg
       run: echo "Starting to build Docker Image for webserver"
+
+    - name: Get TAG from short GIT SHA
+      run:  echo "TAG=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
     
     - name: Docker Build & tag for push
       run: | 
-        docker build -t nginx_hello:0.1 .
-        docker tag nginx_hello:0.1 singymingy86/nginx_hello:0.1
+        docker build -t "nginx_hello:$TAG" .
+        docker tag nginx_hello:$TAG singymingy86/nginx_hello:$TAG
+
     - name: print msg
       run: echo "Build completed"
 
     - name: run container
-      run: docker run -d -p 80:80 nginx_hello:0.1
+      run: docker run -d -p 80:80 nginx_hello:$TAG
 
     - name: Let access it
       run: curl http://127.0.0.1
