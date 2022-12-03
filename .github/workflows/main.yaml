@@ -26,6 +26,11 @@ jobs:
       - name: print short git sha
         run: echo "SHORT GIT SHA is $(git rev-parse --short $GITHUB_SHA)"
 
+      - name: Get Variable and value
+        run: echo "TAG=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+
       # Runs a set of commands using the runners shell
-      - name: list repo content
-        run: ls -la
+      - name: list repo content and print TAG value
+        run: |
+          ls -la
+          echo $TAG
