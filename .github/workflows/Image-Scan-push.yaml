@@ -1,0 +1,33 @@
+name: Build-Scan-Push
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+     
+    - name: print msg
+      run: echo "Building Container Image:"
+
+    - name: Get TAG from short GIT SHA
+      run:  echo "TAG=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+    
+    - name: Docker Build & tag for push
+      run: | 
+        docker build -t "nginx_hello:$TAG" .
+        docker tag nginx_hello:$TAG singymingy86/nginx_hello:$TAG
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+          image-ref: 'singymingy86/nginx_hello:latest'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
