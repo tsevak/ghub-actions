@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    name: build
     runs-on: ubuntu-latest
 
     steps:
@@ -31,18 +32,71 @@ jobs:
          docker tag nginx_hello:${{ steps.gtag.outputs.TAG }} singymingy86/nginx_hello:${{ steps.gtag.outputs.TAG }}
     
     - name: Run Trivy vulnerability scanner
+      id: trivy_scanner
       uses: aquasecurity/trivy-action@master
       with:
           image-ref: "nginx_hello:${{ steps.gtag.outputs.TAG }}"
           format: 'table'
-          exit-code: '2'
+          exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-    
-    - name: Push to Registry
-      run: docker push singymingy86/nginx_hello:${{ steps.gtag.outputs.TAG }}
-    - name: Print Hello
-      run: echo Hello
+      #continue-on-error: true
 
+    # - name: Push to Registry
+    #   run: docker push singymingy86/nginx_hello:${{ steps.gtag.outputs.TAG }}
+
+    - name: Print Success msg and Push to registry
+      if: success()
+      run: |
+        echo 'Image passed from trivy scanner and now pushing to Container registry'
+        docker push singymingy86/nginx_hello:${{ steps.gtag.outputs.TAG }}
+
+    - name: Send custom JSON data to Slack workflow
+      id: slack
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                }
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    
+    # - name: Print Failure
+    #   if: failure()
+    #   run: echo 'Failed'
+
+    - name: Slack Notification after Scan
+      if: failure()
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+          # For posting a rich message using Block Kit
+        payload: |
+            {
+              "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Job failed due to vulerbilities in Continaer Image"
+                  }
+                }
+              ]
+            }
+        env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     
