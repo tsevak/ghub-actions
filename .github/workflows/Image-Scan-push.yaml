@@ -42,5 +42,7 @@ jobs:
     
     - name: Push to Registry
       run: docker push singymingy86/nginx_hello:${{ steps.gtag.outputs.TAG }}
+    - name: Print Hello
+      run: echo Hello
 
     
