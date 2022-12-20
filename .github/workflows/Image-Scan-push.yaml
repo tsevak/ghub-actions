@@ -18,7 +18,8 @@ jobs:
     - name: Get TAG from short GIT SHA
       id: gtag
       run: |
-        echo  "::set-output name=TAG::$(git rev-parse --short $GITHUB_SHA)"
+        #echo  "::set-output name=TAG::$(git rev-parse --short $GITHUB_SHA)"
+        echo "TAG=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_OUTPUT
     
     - name: Login to Registry
       uses: docker/login-action@v2
