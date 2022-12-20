@@ -20,6 +20,8 @@ jobs:
       run: |
         #echo  "::set-output name=TAG::$(git rev-parse --short $GITHUB_SHA)"
         echo "TAG=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_OUTPUT
+
+    - run: echo "$TAG"
     
     - name: Login to Registry
       uses: docker/login-action@v2
