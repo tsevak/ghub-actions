@@ -1,3 +1,3 @@
 #FROM nginx:1.7.6
-FROM nginx:latest 
-COPY index.html /usr/share/nginx/html
+FROM nginx:mainline-alpine-slim
+#COPY index.html /usr/share/nginx/html

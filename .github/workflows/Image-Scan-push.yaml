@@ -26,7 +26,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
  
-    - name: Docker Build & tag for push
+    - name: Docker Build & tag
       run: |
          docker build -t nginx_hello:${{ steps.gtag.outputs.TAG }} .
          docker tag nginx_hello:${{ steps.gtag.outputs.TAG }} singymingy86/nginx_hello:${{ steps.gtag.outputs.TAG }}
@@ -41,10 +41,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-      #continue-on-error: true
 
-    # - name: Push to Registry
-    #   run: docker push singymingy86/nginx_hello:${{ steps.gtag.outputs.TAG }}
     - name: Slack Notification after Scan
       if: failure() && steps.scanner.outcome == 'failure'
       uses: slackapi/slack-github-action@v1.23.0
@@ -75,7 +72,6 @@ jobs:
       id: slack
       uses: slackapi/slack-github-action@v1.23.0
       with:
-        # For posting a rich message using Block Kit
         payload: |
           {
             "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
