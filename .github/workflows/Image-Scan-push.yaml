@@ -106,7 +106,6 @@ jobs:
                   "text": "Successfully completed Container Build action"
                 }
               }
-            ]¡¡¡1¡
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
