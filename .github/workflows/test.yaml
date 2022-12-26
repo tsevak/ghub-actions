@@ -1,4 +1,4 @@
-name: ci-ImageBuild-Push
+name: ci-ImageBuild-Push-testing
 
 on: 
   workflow_dispatch:
