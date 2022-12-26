@@ -1,0 +1,32 @@
+name: test-if-cond
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Print ENV
+      id: penv
+      run: printen
+     
+    - name: check if condition with above step
+      if: steps.penv.outcome == 'failure'
+      run: echo "it failed"
+
+    - name: check with one more failure()
+      if: failure()
+      run: echo "one more failed msg"
+
+    - name: check with success
+      if: success()
+      run: echo "success"
+
+    - name: testing one more failure() condition
+      if: failure()
+      run: echo "3rd msg"

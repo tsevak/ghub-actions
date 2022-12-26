@@ -27,9 +27,32 @@ jobs:
         password: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
  
     - name: Docker Build & tag
+      id: dbuild
       run: |
          docker build -t nginx_hello:${{ steps.gtag.outputs.TAG }} .
          docker tag nginx_hello:${{ steps.gtag.outputs.TAG }} singymingy86/nginx_hello:${{ steps.gtag.outputs.TAG }}
+    
+    - name: Slack Notification if Container build got failed
+      if: failure() && steps.dbuild.outcome == 'failure'
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        payload: |
+            {
+              "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Job failed due to container build is failing..."
+                  }
+                }
+              ]
+            }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
     
     - name: Run Trivy vulnerability scanner
       id: scanner
@@ -83,10 +106,8 @@ jobs:
                   "text": "Successfully completed Container Build action"
                 }
               }
-            ]
+            ]¡¡¡1¡
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-    
